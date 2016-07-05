@@ -1,36 +1,35 @@
-odoo.db.t1:
-  container_name: odoo.db.t1
+odoo.db:
+  container_name: odoo.db
   hostname: odoo-db
   image: postgres:9.5
+  restart: always
   volumes:
    - ../volumes/db:/var/lib/postgresql/data
   environment:
    - POSTGRES_USER=odoouser
    - POSTGRES_PASSWORD=zayth123
 
-odoo.app.t1:
-  container_name: odoo.app.t1
+odoo.app:
+  container_name: odoo.app
   hostname: odoo-app
-  image: zaytech/odoo8_l10nbr_app:1.0.5
+  image: zaytech/odoo8_l10nbr_app
+  restart: always
   volumes:
    - ../volumes/odoo:/opt/odoo
   links:
-    - odoo.db.t1:db
-  ports:
-   - "9998:8069"
+    - odoo.db:db
 
-
-odoo.proxy.t1:
-  container_name: odoo.proxy.t1
+odoo.proxy:
+  container_name: odoo.proxy
   hostname: proxy
   image: nginx
-  #restart: always
+  restart: always
   volumes:
    - ../volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
    - ../volumes/nginx:/var/nginx
    - ../volumes/nginx/www:/var/www/
   ports:
-   - "777:80"
+   - "80:80"
   links:
-    - odoo.db.t1:odoo.db
-    - odoo.app.t1:odoo.app
+    - odoo.db:odoo.db
+    - odoo.app:odoo.app
